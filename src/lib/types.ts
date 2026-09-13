@@ -10,7 +10,8 @@ export type Category =
   | "Hamstrings"
   | "Glutes"
   | "Calves"
-  | "Core";
+  | "Core"
+  | "Lower Back";
 
 export const CATEGORIES: Category[] = [
   "Chest",
@@ -23,6 +24,7 @@ export const CATEGORIES: Category[] = [
   "Glutes",
   "Calves",
   "Core",
+  "Lower Back",
 ];
 
 export interface ProgramExercise {
@@ -50,6 +52,8 @@ export interface ProgramDay {
   warmup: string[];
   exercises: ProgramExercise[];
   cardioNote?: string;
+  /** An add-on block (e.g. Core) that can be run alone or appended to any session. */
+  addon?: boolean;
 }
 
 /** 0 = Sunday … 6 = Saturday, value = day id or null for rest. */

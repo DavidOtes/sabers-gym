@@ -40,10 +40,12 @@ function DayPicker() {
                 <div className="flex items-center gap-2">
                   <div className="display text-2xl">{d.name}</div>
                   {isToday && <span className="chip" style={{ ["--chip" as string]: "var(--accent)" }}>Today</span>}
+                  {d.addon && <span className="chip">Add-on</span>}
                 </div>
                 <div className="text-xs text-ink-3 mt-1">
                   {d.exercises.length} exercises · {d.exercises.reduce((a, e) => a + e.sets, 0)} sets
                   {last ? ` · last done ${new Date(last.finishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}` : " · not done yet"}
+                  {d.addon ? " · run alone or add to any session" : ""}
                 </div>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {Array.from(new Set(d.exercises.map((e) => e.category))).map((c) => (
@@ -63,7 +65,7 @@ function DayPicker() {
 
 function ActiveWorkout() {
   const router = useRouter();
-  const { active, settings, logs, program, updateSet, addSet, removeSet, toggleWarmup, setActiveNotes, setActiveCardio, finishWorkout, applyProgressions, discardWorkout, startRest } =
+  const { active, settings, logs, program, updateSet, addSet, removeSet, toggleWarmup, setActiveNotes, setActiveCardio, finishWorkout, applyProgressions, discardWorkout, startRest, appendDay } =
     useStore();
   const [elapsed, setElapsed] = useState("0:00");
   const [finishOpen, setFinishOpen] = useState(false);
@@ -242,6 +244,15 @@ function ActiveWorkout() {
           );
         })}
       </div>
+
+      {/* Add-on blocks (Core) */}
+      {program.days
+        .filter((d) => d.addon && d.id !== active.dayId && d.exercises.some((e) => !active.exercises.some((x) => x.exerciseId === e.id)))
+        .map((d) => (
+          <button key={d.id} className="btn btn-secondary w-full mt-3" onClick={() => appendDay(d.id)}>
+            + Add {d.name} ({d.exercises.length} exercises)
+          </button>
+        ))}
 
       {/* Cardio */}
       <section className="card p-4 mt-4">

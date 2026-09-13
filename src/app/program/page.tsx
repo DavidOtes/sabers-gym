@@ -49,15 +49,18 @@ export default function ProgramPage() {
       </section>
 
       {/* Days */}
-      {program.days.map((day, di) => (
+      {program.days.map((day) => (
         <section key={day.id} className="card">
           <div className="flex items-start justify-between gap-3 p-4 border-b border-line">
             <div>
               <div className="eyebrow">
-                Day {di + 1} · {Object.entries(program.schedule).filter(([, v]) => v === day.id).map(([k]) => WEEKDAYS[Number(k)]).join(", ") || "unscheduled"}
+                {day.addon
+                  ? "Add-on · any day"
+                  : `Day ${program.days.filter((d) => !d.addon).indexOf(day) + 1} · ${Object.entries(program.schedule).filter(([, v]) => v === day.id).map(([k]) => WEEKDAYS[Number(k)]).join(", ") || "unscheduled"}`}
               </div>
               <h2 className="display text-2xl mt-0.5">{day.name}</h2>
               {day.warmup.length > 0 && <p className="text-xs text-ink-3 mt-1">Warm-up: {day.warmup.join(" · ")}</p>}
+              {day.addon && day.cardioNote && <p className="text-xs text-ink-3 mt-1">{day.cardioNote}</p>}
             </div>
             <button className="btn btn-ghost btn-sm" onClick={() => setDayEdit(day)}>
               Edit day
@@ -120,6 +123,7 @@ export default function ProgramPage() {
             <li>Heavy compounds: 2–3 min between sets.</li>
             <li>Machines and isolation: 60–90 s.</li>
             <li>Cardio 2–3× a week: treadmill 10–20 min or StairMaster 5–15 min, kept away from heavy leg days.</li>
+            <li>Core: 2–3× a week. Add it to the end of any session with one tap, or run it alone on a rest day.</li>
             <li>Stop a set if form starts to break down.</li>
           </ul>
         </div>

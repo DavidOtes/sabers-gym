@@ -138,6 +138,7 @@ export const CATEGORY_COLOR: Record<Category, string> = {
   Glutes: "var(--c-glutes)",
   Calves: "var(--c-calves)",
   Core: "var(--c-core)",
+  "Lower Back": "var(--c-lowerback)",
 };
 
 export function describeTarget(e: ProgramExercise, unit: string): string {

@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { DEFAULT_PROGRAM } from "./program";
+import { DEFAULT_PROGRAM, migrateProgram } from "./program";
 import type {
   ActiveWorkout,
   DailyCheckin,
@@ -44,6 +44,8 @@ interface State {
   // workout
   startWorkout: (dayId: string) => void;
   discardWorkout: () => void;
+  /** Append another day's exercises (e.g. the Core block) to the active workout. */
+  appendDay: (dayId: string) => void;
   updateSet: (exIdx: number, setIdx: number, patch: Partial<LoggedSet>) => void;
   addSet: (exIdx: number) => void;
   removeSet: (exIdx: number, setIdx: number) => void;
@@ -148,6 +150,16 @@ export const useStore = create<State>()(
         });
       },
       discardWorkout: () => set({ active: null, restUntil: null }),
+      appendDay: (dayId) =>
+        set((s) => {
+          if (!s.active) return s;
+          const day = s.program.days.find((d) => d.id === dayId);
+          if (!day) return s;
+          const have = new Set(s.active.exercises.map((e) => e.exerciseId));
+          const extra = day.exercises.filter((e) => !have.has(e.id)).map((e) => buildLogged(e, s.logs));
+          if (!extra.length) return s;
+          return { active: { ...s.active, exercises: [...s.active.exercises, ...extra] } };
+        }),
       updateSet: (exIdx, setIdx, patch) =>
         set((s) => {
           if (!s.active) return s;
@@ -290,6 +302,12 @@ export const useStore = create<State>()(
         restTotal: s.restTotal,
       }),
       skipHydration: true,
+      version: 2,
+      migrate: (persisted, version) => {
+        const p = persisted as { program?: Program } & Record<string, unknown>;
+        if (version < 2 && p?.program) p.program = migrateProgram(p.program);
+        return p;
+      },
       onRehydrateStorage: () => () => {
         useStore.setState({ hydrated: true });
       },
