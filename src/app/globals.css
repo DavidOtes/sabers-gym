@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+/* Dark-first: rubber floor, steel, chalk. Plate colours carry the data. */
+:root {
+  --bg: #0f1216;
+  --panel: #171b21;
+  --panel-2: #1f252d;
+  --line: #2a313b;
+  --line-2: #364050;
+  --ink: #ece8df;
+  --ink-2: #a7afbb;
+  --ink-3: #6c7583;
+  --red: #e6394a;
+  --red-ink: #ffffff;
+  --yellow: #f2b705;
+  --green: #35b072;
+  --blue: #3d86f5;
+  --accent: var(--red);
+
+  --c-chest: #e6394a;
+  --c-back: #3d86f5;
+  --c-shoulders: #f2b705;
+  --c-triceps: #f47c3c;
+  --c-biceps: #a06cf5;
+  --c-quads: #35b072;
+  --c-hamstrings: #1fb5b5;
+  --c-glutes: #e05aa6;
+  --c-calves: #8fbf3f;
+  --c-core: #9aa3b0;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #e9ebee;
+  --panel: #ffffff;
+  --panel-2: #f2f4f6;
+  --line: #d6dae0;
+  --line-2: #c2c8d0;
+  --ink: #14181f;
+  --ink-2: #4b5462;
+  --ink-3: #7d8593;
+  --red: #d62839;
+  --yellow: #d9a300;
+  --green: #22935b;
+  --blue: #2b6fe0;
+  --c-shoulders: #d9a300;
+  --c-core: #6b7482;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-red: var(--red);
+  --color-yellow: var(--yellow);
+  --color-green: var(--green);
+  --color-blue: var(--blue);
+  --color-accent: var(--accent);
+  --font-display: var(--font-display), "Impact", sans-serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+/* Display type: condensed, tight, uppercase for headings and hero numbers. */
+.display {
+  font-family: var(--font-display), Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
+  font-weight: 800;
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.field {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  color: var(--ink);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 120ms;
+}
+.field:focus-visible {
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.field::placeholder {
+  color: var(--ink-3);
+}
+select.field {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 80ms, background 120ms, border-color 120ms, opacity 120ms;
+  min-height: 42px;
+  user-select: none;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--red-ink);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 88%, white);
+}
+.btn-secondary {
+  background: var(--panel-2);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn-secondary:hover {
+  border-color: var(--line-2);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+}
+.btn-ghost:hover {
+  color: var(--ink);
+  background: var(--panel-2);
+}
+.btn-danger {
+  background: transparent;
+  color: var(--red);
+  border-color: color-mix(in srgb, var(--red) 40%, transparent);
+}
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+.btn-sm {
+  min-height: 34px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+/* A plate: the signature mark. Filled = done, hollow = pending. */
+.plate {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid var(--ink-3);
+  background: transparent;
+  transition: background 150ms, border-color 150ms, transform 150ms;
+}
+.plate.on {
+  background: var(--plate, var(--accent));
+  border-color: var(--plate, var(--accent));
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--chip, var(--ink-3));
+}
+
+.fade-in {
+  animation: fadeIn 260ms ease-out both;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
