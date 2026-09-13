@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { Category } from "@/lib/types";
 import { CATEGORY_COLOR } from "@/lib/utils";
 
@@ -110,24 +111,27 @@ export function Modal({ open, onClose, title, children }: { open: boolean; onClo
       document.body.style.overflow = "";
     };
   }, [open, onClose]);
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-0 md:p-6" onClick={onClose}>
+  if (!open || typeof document === "undefined") return null;
+  // Portal to <body>: Safari positions `fixed` children relative to any animated/transformed
+  // ancestor, which would leave the sheet stranded at the bottom of a long page.
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-0 md:p-6 cursor-pointer" onClick={onClose}>
       <div
         role="dialog"
         aria-modal="true"
-        className="card w-full md:max-w-lg max-h-[90dvh] overflow-y-auto rounded-b-none md:rounded-b-[14px] p-5 fade-in"
+        className="card w-full md:max-w-lg max-h-[90dvh] overflow-y-auto rounded-b-none md:rounded-b-[14px] p-5 fade-in cursor-auto pb-[max(1.25rem,env(safe-area-inset-bottom))]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-4">
           <h2 className="display text-2xl">{title}</h2>
-          <button className="btn btn-ghost btn-sm" onClick={onClose} aria-label="Close">
+          <button type="button" className="btn btn-ghost btn-sm" onClick={onClose} aria-label="Close">
             ✕
           </button>
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
